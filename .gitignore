@@ -1,0 +1,8 @@
+*.md
+*.py
+*.sh
+__pycache__/
+.vscode/
+.DS_Store
+!.nojekyll
+

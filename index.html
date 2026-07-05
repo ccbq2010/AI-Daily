@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 日报</title>
+<style>
+body { font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', sans-serif;
+       max-width: 700px; margin: 3rem auto; padding: 1rem; color: #333; }
+h1 { font-size: 1.8rem; }
+ul { list-style: none; padding: 0; }
+li { margin: .8rem 0; border-bottom: 1px solid #eee; padding-bottom: .8rem; }
+a { color: #2547e9; text-decoration: none; font-weight: 600; }
+a:hover { text-decoration: underline; }
+.meta { font-size: .85rem; color: #888; }
+</style>
+</head>
+<body>
+<h1>📰 AI 日报</h1>
+<p>每日 AI 资讯精选。页面自动生成。</p>
+<ul id="reports">
+<li>暂无日报，首次运行后自动出现。</li>
+</ul>
+<script>
+fetch('./index.json')
+  .then(r => r.ok ? r.json() : [])
+  .then(list => {
+    const ul = document.getElementById('reports');
+    ul.innerHTML = '';
+    list.forEach(r => {
+      const li = document.createElement('li');
+      const d = new Date(r.date).toLocaleDateString('zh-CN');
+      li.innerHTML = `<a href="${r.file}">${d} · ${r.title}</a>
+        <div class="meta">${r.count} 条 · 评分 ${r.top_score}</div>`;
+      ul.appendChild(li);
+    });
+  });
+</script>
+</body>
+</html>
