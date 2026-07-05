@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="auto">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Daily · 2026-07-05</title>
+<style>
+:root {
+  --font-display: "IBM Plex Sans","Noto Sans SC",system-ui,sans-serif;
+  --font-body: "IBM Plex Sans","Noto Sans SC",system-ui,sans-serif;
+  --font-mono: "IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --paper: #f8f9fb; --paper-2: #eef0f4; --paper-3: #e5e8ee;
+  --ink: #14161c; --ink-soft: #545b67; --ink-faint: #878e9c;
+  --rule: #e1e4ea; --accent: #2547e1; --accent-ink: #1f3bc4; --accent-wash: #e3e7fb;
+  --r-card: 8px; --r-chip: 5px; --r-btn: 6px;
+  --shadow-soft: 0 1px 2px rgba(20,22,30,.04), 0 8px 30px rgba(20,22,30,.05);
+  --shadow-lift: 0 2px 6px rgba(20,22,30,.07), 0 18px 50px rgba(20,22,30,.09);
+}
+[data-theme="dark"],@media(prefers-color-scheme:dark){
+  :root { --paper:#0d0f14; --paper-2:#161922; --paper-3:#1d212b;
+           --ink:#e7e9ef; --ink-soft:#9aa2b1; --ink-faint:#6a7280;
+           --rule:#242936; --accent:#8298ff; --accent-ink:#93a5ff; --accent-wash:#171b2e;
+           --shadow-soft:0 1px 2px rgba(0,0,0,.3),0 10px 34px rgba(0,0,0,.4);
+           --shadow-lift:0 2px 8px rgba(0,0,0,.4),0 22px 60px rgba(0,0,0,.5); }
+}
+* { box-sizing:border-box; }
+html { -webkit-text-size-adjust:100%; background:var(--paper); }
+body { margin:0; color:var(--ink); background:var(--paper);
+        font-family:var(--font-body); font-size:16px; line-height:1.7;
+        -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+a { color:var(--accent-ink); text-decoration:none; }
+a:hover { text-decoration:underline; }
+.wrap { width:100%; max-width:1140px; margin:0 auto; padding:0 40px; }
+
+/* Reading progress bar */
+.reading-progress { position:fixed; top:0; left:0; width:100%; height:2px;
+                     background:transparent; z-index:100; }
+.reading-progress-bar { height:100%; width:0; background:var(--accent);
+                         transition:width .1s; }
+
+/* Top strip (brand) */
+.pub-strip { background:var(--paper-2); border-bottom:1px solid var(--rule); }
+.pub-strip-inner { display:flex; align-items:center; gap:16px;
+                     padding-top:15px; padding-bottom:15px; }
+.pub-brand { display:flex; align-items:center; gap:10px;
+              font-family:var(--font-mono); font-weight:600; color:var(--ink); }
+.pub-brand:hover { text-decoration:none; color:var(--accent-ink); }
+.brand-mark { width:18px; height:18px; fill:var(--accent); }
+.pub-name { font-size:14px; letter-spacing:.02em; }
+.pub-name i { font-style:normal; color:var(--ink-faint); font-weight:400;
+               font-size:12px; margin-left:4px; }
+.dot { width:3px; height:3px; border-radius:50%; background:var(--ink-faint); }
+
+/* Masthead (sticky masthead) */
+.masthead { position:sticky; top:0; z-index:30;
+             background:color-mix(in srgb,var(--paper) 90%,transparent);
+             border-bottom:1px solid var(--rule); backdrop-filter:blur(10px); }
+.masthead-inner { display:flex; align-items:center; gap:20px;
+                   padding-top:18px; padding-bottom:18px; }
+.product-current { font-family:var(--font-mono); font-size:11px; letter-spacing:.14em;
+                    text-transform:uppercase; color:var(--ink-faint); }
+.product-title { font-size:18px; font-weight:600; margin-left:auto; margin-right:0;
+                   color:var(--ink); display:flex; align-items:center; gap:12px; }
+.product-kind { font-family:var(--font-mono); font-size:11px; letter-spacing:.06em;
+                 color:var(--accent-ink); font-weight:500; }
+
+/* Topic chips (filter) */
+.topic-rail { display:flex; justify-content:flex-end; gap:7px; flex-wrap:wrap; }
+.topic-chip { font-family:var(--font-mono); font-size:12px; padding:7px 12px;
+               border:1px solid var(--rule); border-radius:var(--r-chip);
+               background:var(--paper-2); color:var(--ink-soft); cursor:pointer;
+               transition:all .15s; }
+.topic-chip:hover { border-color:var(--ink-faint); color:var(--ink); }
+.topic-chip.on { background:var(--accent); border-color:var(--accent); color:#fff; }
+
+/* Hero section */
+.hero { padding:46px 0 34px; border-bottom:1px solid var(--rule); }
+.kicker { display:flex; align-items:center; gap:10px; margin:0 0 12px;
+            font-family:var(--font-mono); font-size:12px; letter-spacing:.14em;
+            text-transform:uppercase; color:var(--accent-ink); }
+.kicker::before { content:""; width:22px; height:1.5px; background:var(--accent); }
+.hero h1 { margin:0 0 12px; font-size:clamp(26px,3.4vw,38px); line-height:1.08;
+             letter-spacing:-.8px; font-weight:600; }
+.hero p { margin:0; max-width:72ch; color:var(--ink-soft); font-size:15.5px; }
+.hero .meta-dot { color:var(--ink-faint); margin:0 .55em; }
+.hero .meta-accent { color:var(--accent-ink); font-weight:500; }
+
+/* 2-column digest grid */
+.digest { display:grid; grid-template-columns:1fr 1fr; gap:22px;
+           list-style:none; margin:0; padding:22px 0 0; }
+
+/* Day header in feed */
+.dayhead { grid-column:1/-1; display:flex; align-items:center; gap:14px;
+            margin:22px 0 4px; }
+.dayhead .d { font-family:var(--font-mono); font-size:22px; font-weight:500;
+                color:var(--ink); letter-spacing:.02em; }
+.dayhead .y,.dayhead .n { font-family:var(--font-mono); font-size:12px;
+                           color:var(--ink-faint); }
+.dayhead .n { margin-left:auto; }
+
+/* Card */
+.dn-card { min-height:100%; border:1px solid var(--rule); border-radius:var(--r-card);
+            background:var(--paper); overflow:hidden; display:flex; flex-direction:column;
+            transition:border-color .18s,transform .18s,box-shadow .18s; }
+.dn-card:hover { border-color:var(--accent); transform:translateY(-2px);
+                  box-shadow:var(--shadow-soft); }
+.dn-card.featured-hero { border-color:color-mix(in oklab,var(--accent) 45%,var(--rule)); }
+.featured-pill { font-family:var(--font-mono); font-size:10px; letter-spacing:.06em;
+                   text-transform:uppercase; color:#fff; background:var(--accent);
+                   border-radius:4px; padding:2px 7px; display:inline-block;
+                   margin-bottom:8px; }
+.card-body { padding:18px 20px 20px; display:flex; flex-direction:column;
+              flex:1; gap:8px; }
+.article-title { margin:0; font-size:18px; line-height:1.32; letter-spacing:-.3px;
+                   font-weight:600; }
+.article-title a { color:var(--ink); }
+.dn-card:hover .article-title a { color:var(--accent-ink); text-decoration:none; }
+.score-row { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+.score-badge { font-family:var(--font-mono); font-size:13px; font-weight:600;
+                color:var(--accent-ink); }
+.score-badge .max { color:var(--ink-faint); font-weight:400; font-size:11px; }
+.article-desc { color:var(--ink-soft); font-size:14px; line-height:1.6; margin:0;
+                  display:-webkit-box; -webkit-line-clamp:3;
+                  -webkit-box-orient:vertical; overflow:hidden; }
+.article-tags { display:flex; gap:6px; flex-wrap:wrap; margin-top:auto;
+                  padding-top:4px; }
+.article-tag { font-family:var(--font-mono); font-size:11px; color:var(--accent-ink);
+                 letter-spacing:.02em; }
+.article-tag::before { content:"· "; color:var(--ink-faint); }
+.article-tag:first-child::before { content:""; }
+.card-meta { display:flex; align-items:center; gap:10px; font-family:var(--font-mono);
+              font-size:11px; color:var(--ink-faint); margin-top:6px; }
+.card-meta .src { color:var(--accent-ink); font-weight:500; }
+
+footer { text-align:center; color:var(--ink-faint); font-size:13px; margin-top:3rem;
+          padding-top:2rem; border-top:1px solid var(--rule); }
+
+@media(max-width:720px){
+  .wrap { padding:0 16px; }
+  .digest { grid-template-columns:1fr; gap:16px; }
+  .hero h1 { font-size:28px; }
+  .masthead-inner { flex-wrap:wrap; gap:10px; }
+  .topic-rail { justify-content:flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- Reading progress -->
+<div class="reading-progress" aria-hidden="true"><div class="reading-progress-bar" id="rp"></div></div>
+
+<!-- Publisher strip -->
+<div class="pub-strip">
+ <div class="wrap pub-strip-inner">
+  <a class="pub-brand" href="#">
+   <svg class="brand-mark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 3h18v3H3zm0 7h12v3H3zm0 7h18v3H3z"/></svg>
+   <span class="pub-name">AI Daily Digest</span>
+  </a>
+  <span class="dot"></span>
+  <span style="font-family:var(--font-mono);font-size:12px;color:var(--ink-faint);">HackerNews · arXiv · GitHub Trending</span>
+ </div>
+</div>
+
+<!-- Sticky masthead with topic filter -->
+<header class="masthead">
+ <div class="wrap masthead-inner">
+  <div class="product-current">Selected · Daily</div>
+  <nav class="topic-rail" id="topics">
+   <button class="topic-chip on" data-topic="all">全部</button>
+   <button class="topic-chip" data-topic="提示词skills">提示词Skills (5)</button><button class="topic-chip" data-topic="模型发布">模型发布 (4)</button><button class="topic-chip" data-topic="免费资源">免费资源 (3)</button><button class="topic-chip" data-topic="多模态">多模态 (3)</button><button class="topic-chip" data-topic="本地部署">本地部署 (2)</button><button class="topic-chip" data-topic="培训教程">培训教程 (2)</button><button class="topic-chip" data-topic="模型评测">模型评测 (1)</button><button class="topic-chip" data-topic="原来ai可以这么玩哒">原来AI可以这么玩哒 (1)</button>
+  </nav>
+ </div>
+</header>
+
+<!-- Hero (top highlight) -->
+<section class="wrap hero">
+ <div class="kicker">TODAY'S TOP PICKS</div>
+ <h1>今日 AI 要闻 · 2026-07-05</h1>
+ <p>精选 12 条内容，覆盖 HackerNews、arXiv 最新论文、GitHub Trending 项目。
+     <span class="meta-accent">2 条开源工具</span> ·
+     <span class="meta-accent">0 篇论文</span> ·
+     <span class="meta-accent">5 个新项目</span></p>
+</section>
+
+<!-- Main feed -->
+<section class="wrap">
+ <ul class="digest" id="feed">
+  
+<li class="dn-card featured-hero" data-tags="免费资源,多模态,本地部署,模型发布">
+  <div class="card-body">
+    <div class="featured-pill">🏆 今日必读</div>
+    <div class="score-row">
+      <span class="score-badge">12.2 <span class="max">· B站</span></span>
+    </div>
+    <h3 class="article-title"><a href="https://www.bilibili.com/video/BV1gdTZ6iEdQ" target="_blank" rel="noopener">手搓AI夜视婴儿看护器，80亿参数大模型帮我熬夜带娃</a></h3>
+    <p class="article-desc">手搓AI红外夜视婴儿看护器，帮我熬夜盯娃。
+7x24小时持续盯梢，实时监测：宝宝惊醒惊跳、口鼻是否遮挡、看护人操作是否正确。
+事件发生时，ESP32手环震动、蓝牙枕下音箱播放音乐，只摇醒我，不吵醒我老婆。
+背后使用的AI算法，是京东开源的80亿参数开源视频理解大模型JoyAI-VL-Interaction，基于vLLM-Omni推理引擎本地部署，给它接入任意摄像头或者直播视频流，AI就能任劳任怨，</p>
+    <div class="article-tags"><span class="article-tag">免费资源</span><span class="article-tag">多模态</span><span class="article-tag">本地部署</span></div>
+    <div class="card-meta">
+      <span class="src">B站</span>
+      <span>@同济子豪兄</span>
+      <span>播放 18.0万 · 点赞 18.5k · 弹幕 49</span>
+      <span>07-04 12:00</span>
+    </div>
+  </div>
+</li>
+<li class="dn-card " data-tags="免费资源,提示词Skills,本地部署,模型发布,模型评测">
+  <div class="card-body">
+    
+    <div class="score-row">
+      <span class="score-badge">10.1 <span class="max">· B站</span></span>
+    </div>
+    <h3 class="article-title"><a href="https://www.bilibili.com/video/BV1WUTo6HEvQ" target="_blank" rel="noopener">[中配]新智能编码模型Ornith 9B——值得本地运行吗？ - Bart Slodyczka</a></h3>
+    <p class="article-desc">原标题：New Agentic Coding Model Ornith 9B — Is It Worth Running Locally?
+作者：Bart Slodyczka
+原链接：https://www.youtube.com/watch?v=nFiLFCrsg1w
+上传日期：2026-06-29
+
+简介：作者Bart Slodyczka在视频中测试了新的开源Ornith 1.0模型，特别是9</p>
+    <div class="article-tags"><span class="article-tag">免费资源</span><span class="article-tag">提示词Skills</span><span class="article-tag">本地部署</span></div>
+    <div class="card-meta">
+      <span class="src">B站</span>
+      <span>@声译看世界</span>
+      <span>播放 679 · 点赞 6</span>
+      <span>07-04 05:36</span>
+    </div>
+  </div>
+</li>
+<li class="dn-card " data-tags="原来AI可以这么玩哒,大语言模型,语言,YAML,LLM,JSON,毕设,数据,编程">
+  <div class="card-body">
+    
+    <div class="score-row">
+      <span class="score-badge">9.7 <span class="max">· B站</span></span>
+    </div>
+    <h3 class="article-title"><a href="https://www.bilibili.com/video/BV1FmMP6KEcd" target="_blank" rel="noopener">一种可能更适合LLM的语言：STML（Stable Tree Markup Language）</a></h3>
+    <p class="article-desc">STML 是一种面向人类手写与机器生成的纯文本数据格式。它继承 YAML 的简洁语法，但移除所有隐式类型推断、锚点、别名、复杂多行指示符等特性，并通过严格的容错与确定性规则确保任何符合本规范的解析器，对任意输入都会生成完全相同的抽象语法树（AST），且永远不会崩溃。
+介绍页面：https://kaivictor.github.io/Stable-Tree-Markup-Language/
+仓库地址</p>
+    <div class="article-tags"><span class="article-tag">原来AI可以这么玩哒</span><span class="article-tag">大语言模型</span><span class="article-tag">语言</span></div>
+    <div class="card-meta">
+      <span class="src">B站</span>
+      <span>@想要不愁</span>
+      <span>播放 168 · 点赞 17 · 弹幕 2</span>
+      <span>07-04 22:37</span>
+    </div>
+  </div>
+</li>
+<li class="dn-card " data-tags="培训教程,多模态,模型发布">
+  <div class="card-body">
+    
+    <div class="score-row">
+      <span class="score-badge">9.5 <span class="max">· B站</span></span>
+    </div>
+    <h3 class="article-title"><a href="https://www.bilibili.com/video/BV1TwTf6aEqn" target="_blank" rel="noopener">Google Gemini 3.5 Pro将至、GPT-5.6套餐限额放宽、Meta Watermelon追平GPT-5.5 | 7月4日 AI日报</a></h3>
+    <p class="article-desc">🤖 AI动态
+1. Google Gemini 3.5 Pro泄露，UI生成能力大幅提升
+2. GPT-5.6套餐限额将大幅放宽
+3. Meta首席AI官：Watermelon追平GPT-5.5
+4. Grok即将加入XChat群聊对话
+5. Anthropic承认植入隐蔽标记，中国用户遭遇全链路围堵
+6. Claude Code在中国的双重禁令困境
+7. MrFlow：FLUX与Qwen Ima</p>
+    <div class="article-tags"><span class="article-tag">培训教程</span><span class="article-tag">多模态</span><span class="article-tag">模型发布</span></div>
+    <div class="card-meta">
+      <span class="src">B站</span>
+      <span>@_AI风向标_</span>
+      <span>播放 11.9k · 点赞 106 · 弹幕 2</span>
+      <span>07-04 11:26</span>
+    </div>
+  </div>
+</li>
+<li class="dn-card " data-tags="多模态">
+  <div class="card-body">
+    
+    <div class="score-row">
+      <span class="score-badge">9.5 <span class="max">· B站</span></span>
+    </div>
+    <h3 class="article-title"><a href="https://www.bilibili.com/video/BV1kbMu6XE9F" target="_blank" rel="noopener">我用GPT的image2做了什么？</a></h3>
+    <p class="article-desc">chatGPT image2的实际应用中的简单分享</p>
+    <div class="article-tags"><span class="article-tag">多模态</span></div>
+    <div class="card-meta">
+      <span class="src">B站</span>
+      <span>@Haao_</span>
+      <span>播放 24 · 点赞 10</span>
+      <span>07-05 11:46</span>
+    </div>
+  </div>
+</li>
+<li class="dn-card " data-tags="Shell">
+  <div class="card-body">
+    
+    <div class="score-row">
+      <span class="score-badge">9.2 <span class="max">· GitHub</span></span>
+    </div>
+    <h3 class="article-title"><a href="https://github.com/Kulaxyz/token-diet" target="_blank" rel="noopener">Kulaxyz/token-diet</a></h3>
+    <p class="article-desc">• 是什么：为 AI 编码代理持续节省 token 成本的提示优化技能。
+• 使用场景：在 Claude Code、Cursor、Windsurf、Copilot 中进行长上下文或频繁编码对话的开发者。
+• 核心亮点：在平均正确率几乎不变的情况下，token 使用量降低约 31%，显著节省调用费。
+• 推荐考虑：适合在意 API 开销的团队/个人；工程较强但复杂新任务需核对其优化后提示是否完整。</p>
+    <div class="article-tags"><span class="article-tag">Shell</span></div>
+    <div class="card-meta">
+      <span class="src">GitHub</span>
+      <span>@Kulaxyz</span>
+      <span>★510 · Shell</span>
+      <span>07-04 18:32</span>
+    </div>
+  </div>
+</li>
+<li class="dn-card " data-tags="免费资源,提示词Skills,模型发布">
+  <div class="card-body">
+    
+    <div class="score-row">
+      <span class="score-badge">8.4 <span class="max">· GitHub</span></span>
+    </div>
+    <h3 class="article-title"><a href="https://github.com/ai4s-research/open-science" target="_blank" rel="noopener">ai4s-research/open-science</a></h3>
+    <p class="article-desc">• 是什么：开源 AI 科研桌面工作台，专为科学家打造。
+• 使用场景：科研人员本地进行可复现性 AI 研究。
+• 核心亮点：模型无关 + MCP + Tauri 架构，本地优先。
+• 推荐考虑：重数据隐私或需本地产力的研究团队。</p>
+    <div class="article-tags"><span class="article-tag">免费资源</span><span class="article-tag">提示词Skills</span><span class="article-tag">模型发布</span></div>
+    <div class="card-meta">
+      <span class="src">GitHub</span>
+      <span>@ai4s-research</span>
+      <span>★97 · TypeScript</span>
+      <span>07-05 05:42</span>
+    </div>
+  </div>
+</li>
+<li class="dn-card " data-tags="培训教程,提示词Skills">
+  <div class="card-body">
+    
+    <div class="score-row">
+      <span class="score-badge">8.3 <span class="max">· HN</span></span>
+    </div>
+    <h3 class="article-title"><a href="https://news.ycombinator.com/item?id=48791380" target="_blank" rel="noopener">Mouse: Precision Editing Tools for AI Coding Agents</a></h3>
+    <p class="article-desc">• 是什么：面向AI编码代理提供精准编辑控制的工具。
+
+• 使用场景：开发者使用AI写代码时，实现局部精细化修改，而非整体重写。
+
+• 核心亮点：可编程精准编辑能力，可指定内容范围并控制保留逻辑，区别于传统编辑器。
+
+• 推荐：适合高频使用AI编程的开发者，需学习成本，适用精度需求高场景。</p>
+    <div class="article-tags"><span class="article-tag">培训教程</span><span class="article-tag">提示词Skills</span></div>
+    <div class="card-meta">
+      <span class="src">HN</span>
+      <span>@handfuloflight</span>
+      <span>17 points · 19 评论</span>
+      <span>07-05 13:01</span>
+    </div>
+  </div>
+</li>
+<li class="dn-card " data-tags="提示词Skills">
+  <div class="card-body">
+    
+    <div class="score-row">
+      <span class="score-badge">8.3 <span class="max">· GitHub</span></span>
+    </div>
+    <h3 class="article-title"><a href="https://github.com/uzairansaruzi/hermex" target="_blank" rel="noopener">uzairansaruzi/hermex</a></h3>
+    <p class="article-desc">• 是什么：Hermes AI 代理的 iPhone 原生客户端应用
+• 使用场景：移动端管理/监控 Hermes AI 代理任务
+• 核心亮点：原生 iOS 体验，专为 Hermes 代理设计
+• 推荐考虑：需配合 Hermes 代理使用，iOS 用户优先</p>
+    <div class="article-tags"><span class="article-tag">提示词Skills</span></div>
+    <div class="card-meta">
+      <span class="src">GitHub</span>
+      <span>@uzairansaruzi</span>
+      <span>★570 · Swift</span>
+      <span>07-05 03:07</span>
+    </div>
+  </div>
+</li>
+<li class="dn-card " data-tags="提示词Skills">
+  <div class="card-body">
+    
+    <div class="score-row">
+      <span class="score-badge">8.0 <span class="max">· GitHub</span></span>
+    </div>
+    <h3 class="article-title"><a href="https://github.com/elder-plinius/T3MP3ST" target="_blank" rel="noopener">elder-plinius/T3MP3ST</a></h3>
+    <p class="article-desc">• 是什么：多智能体自主红队安全检测平台。
+• 使用场景：渗透测试员自动化安全评估与攻击模拟。
+• 核心亮点：多个智能体协作执行复杂渗透任务链。
+• 推荐考虑：适合红队研究人员，合规与研究场景使用。</p>
+    <div class="article-tags"><span class="article-tag">提示词Skills</span></div>
+    <div class="card-meta">
+      <span class="src">GitHub</span>
+      <span>@elder-plinius</span>
+      <span>★471 · TypeScript</span>
+      <span>07-05 01:25</span>
+    </div>
+  </div>
+</li>
+<li class="dn-card " data-tags="hackernews">
+  <div class="card-body">
+    
+    <div class="score-row">
+      <span class="score-badge">7.7 <span class="max">· HN</span></span>
+    </div>
+    <h3 class="article-title"><a href="https://news.ycombinator.com/item?id=48789416" target="_blank" rel="noopener">Australian influencer Lily Jay&#x27;s tangled web of AI manipulation</a></h3>
+    <p class="article-desc">• 什么：AI驱动的内容创作与自动化营销工具
+• 谁在用：内容创作者寻求自动化内容生成，但有操纵舆论风险
+• 核心创新：利用AI批量生产并操控网络红人人设与粉丝互动
+• 适合谁用：营销机构需警惕伦理与合规隐患的工具</p>
+    <div class="article-tags"><span class="article-tag">hackernews</span></div>
+    <div class="card-meta">
+      <span class="src">HN</span>
+      <span>@phs318u</span>
+      <span>42 points · 5 评论</span>
+      <span>07-05 05:50</span>
+    </div>
+  </div>
+</li>
+<li class="dn-card " data-tags="Python">
+  <div class="card-body">
+    
+    <div class="score-row">
+      <span class="score-badge">7.6 <span class="max">· GitHub</span></span>
+    </div>
+    <h3 class="article-title"><a href="https://github.com/akseolabs-seo/fable-soul" target="_blank" rel="noopener">akseolabs-seo/fable-soul</a></h3>
+    <p class="article-desc">• 是什么：AI 编码代理的&quot;判断层&quot;，让像高级工程师一样思考、验证与表达。
+• 使用场景：为 Cursor/Copilot 等 AI 编程助手补充自检与复盘能力，减少低水平错误。
+• 核心亮点：以低成本的&quot;判断与反思&quot;机制弥补纯生成，但不提供复杂沙箱或 MCP 能力。
+• 推荐考虑：适合想提升产出质量的团队，但无法替代安全隔离环境 / 沙箱化执行。</p>
+    <div class="article-tags"><span class="article-tag">Python</span></div>
+    <div class="card-meta">
+      <span class="src">GitHub</span>
+      <span>@akseolabs-seo</span>
+      <span>★65 · Python</span>
+      <span>07-03 16:27</span>
+    </div>
+  </div>
+</li>
+ </ul>
+</section>
+
+<footer class="wrap">
+ 📮 每日自动抓取 · 编辑 data/feedback.yml 调整推荐 ·
+ <a href="https://github.com/your-repo">GitHub</a>
+</footer>
+
+<script>
+// Reading progress bar
+window.addEventListener('scroll', () => {
+  const h = document.documentElement;
+  const scrolled = h.scrollTop / (h.scrollHeight - h.clientHeight);
+  document.getElementById('rp').style.width = (scrolled * 100) + '%';
+});
+
+// Chip filter (on / off)
+document.querySelectorAll('.topic-chip').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.topic-chip').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    const t = btn.dataset.topic;
+    document.querySelectorAll('.dn-card').forEach(card => {
+      const tags = (card.dataset.tags || '').toLowerCase();
+      card.style.display = (t === 'all' || tags.includes(t)) ? '' : 'none';
+    });
+  });
+});
+</script>
+</body>
+</html>
